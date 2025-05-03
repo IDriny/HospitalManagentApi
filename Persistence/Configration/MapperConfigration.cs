@@ -12,6 +12,7 @@ namespace HospitalManagentApi.Persistence.Configration
             CreateMap<Appointment, BaseAppointmentModel>().ReverseMap();
             CreateMap<Appointment, GetAppointmentModel>().ReverseMap();
             CreateMap<Appointment, GetAppointmentInfoModel>().ReverseMap();
+            CreateMap<Appointment, CreateAppointmentModel>().ReverseMap();
             CreateMap<Appointment, UpdateAppointmentModel>().ReverseMap();
 
 

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HospitalManagentApi.Core.Domain;
+using HospitalManagentApi.Models.Appointment;
 using HospitalManagentApi.Persistence;
 
 namespace HospitalManagentApi.Controllers
@@ -15,44 +17,57 @@ namespace HospitalManagentApi.Controllers
     public class AppointmentsController : ControllerBase
     {
         private readonly HospitalDbContext _context;
+        private readonly IMapper _mapper;
 
-        public AppointmentsController(HospitalDbContext context)
+        public AppointmentsController(HospitalDbContext context,IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Appointments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Appointment>>> GetAppointments()
+        public async Task<ActionResult<IEnumerable<GetAppointmentModel>>> GetAppointments()
         {
-            return await _context.Appointments.ToListAsync();
+            var appointments= await _context.Appointments.ToListAsync();
+            var records = _mapper.Map<List<Appointment>>(appointments);
+            return Ok(records);
         }
 
         // GET: api/Appointments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Appointment>> GetAppointment(int id)
+        public async Task<ActionResult<GetAppointmentInfoModel>> GetAppointment(int id)
         {
-            var appointment = await _context.Appointments.FindAsync(id);
+            var appointment = await _context.Appointments.Include(a => a.Doctor).Include(a => a.Patient)
+                .FirstOrDefaultAsync(a => a.ID == id);
 
             if (appointment == null)
             {
                 return NotFound();
             }
 
-            return appointment;
+            var record = _mapper.Map<GetAppointmentInfoModel>(appointment);
+            record.DoctorName = appointment.Doctor.FullName;
+            record.PatientName = appointment.Patient.FullName;
+
+            return Ok(record);
         }
 
         // PUT: api/Appointments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAppointment(int id, Appointment appointment)
+        public async Task<IActionResult> PutAppointment(int id, UpdateAppointmentModel Updatedappointment)
         {
-            if (id != appointment.ID)
+            if (id != Updatedappointment.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(appointment).State = EntityState.Modified;
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (!AppointmentExists(id))
+                return NotFound();
+            //_context.Entry(appointment).State = EntityState.Modified;
+            _mapper.Map(Updatedappointment, appointment);
 
             try
             {
@@ -76,8 +91,9 @@ namespace HospitalManagentApi.Controllers
         // POST: api/Appointments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Appointment>> PostAppointment(Appointment appointment)
+        public async Task<ActionResult<Appointment>> PostAppointment(CreateAppointmentModel CreatedAppointment)
         {
+            var appointment = _mapper.Map<Appointment>(CreatedAppointment);
             _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
 
