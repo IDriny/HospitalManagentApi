@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HospitalManagentApi.Core.Domain;
+using HospitalManagentApi.Models.Clinic;
 using HospitalManagentApi.Persistence;
 
 namespace HospitalManagentApi.Controllers
@@ -15,45 +17,52 @@ namespace HospitalManagentApi.Controllers
     public class ClinicsController : ControllerBase
     {
         private readonly HospitalDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ClinicsController(HospitalDbContext context)
+        public ClinicsController(HospitalDbContext context,IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Clinics
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Clinic>>> GetClinics()
+        public async Task<ActionResult<IEnumerable<GetClinicModel>>> GetClinics()
         {
-            return await _context.Clinics.ToListAsync();
+            var clinics= await _context.Clinics.ToListAsync();
+            var records = _mapper.Map<List<GetClinicModel>>(clinics);
+            return Ok(records);
         }
 
         // GET: api/Clinics/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Clinic>> GetClinic(int id)
+        public async Task<ActionResult<GetClinicModel>> GetClinic(int id)
         {
             var clinic = await _context.Clinics.FindAsync(id);
-
+            
             if (clinic == null)
             {
                 return NotFound();
             }
+            var record = _mapper.Map<GetClinicModel>(clinic);
 
-            return clinic;
+            return Ok(record);
         }
 
         // PUT: api/Clinics/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutClinic(int id, Clinic clinic)
+        public async Task<IActionResult> PutClinic(int id, UpdateCLinicModel updateCLinic)
         {
-            if (id != clinic.Id)
+            if (id != updateCLinic.Id)
             {
                 return BadRequest();
             }
-
-            _context.Entry(clinic).State = EntityState.Modified;
-
+            var clinic=await _context.Clinics.FindAsync(id);
+            if (!ClinicExists(id))
+                return NotFound();
+            //_context.Entry(clinic).State = EntityState.Modified;
+            _mapper.Map(updateCLinic, clinic);
             try
             {
                 await _context.SaveChangesAsync();
@@ -76,8 +85,10 @@ namespace HospitalManagentApi.Controllers
         // POST: api/Clinics
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Clinic>> PostClinic(Clinic clinic)
+        public async Task<ActionResult<Clinic>> PostClinic(CreateClinicModel CreatedClinic)
         {
+
+            var clinic = _mapper.Map<Clinic>(CreatedClinic);
             _context.Clinics.Add(clinic);
             await _context.SaveChangesAsync();
 
