@@ -6,7 +6,7 @@
 
         public string Name { get; set; }
 
-        public IList<Doctor> Doctors { get; set; }
+        public IList<ClinicDoctor> Doctors { get; set; }
 
     }
 }

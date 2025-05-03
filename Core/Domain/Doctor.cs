@@ -19,7 +19,7 @@ namespace HospitalManagentApi.Core.Domain
         public string Phone_Number { get; set; }
         public string Specialty { get; set; }
         public IList<Appointment> Appointment { get; set; }
-        public IList<Clinic> Clinic { get; set; }
+        public IList<ClinicDoctor> Clinic { get; set; }
     }
 
 

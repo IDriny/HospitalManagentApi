@@ -17,12 +17,15 @@ namespace HospitalManagentApi.Persistence
         public DbSet<Doctor> Doctor { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Clinic> Clinics { get; set; }
+        public  DbSet<ClinicDoctor> ClinicDoctors { get; set; }
 
 
 
 
         protected void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            //Appointment Configration
             modelBuilder.Entity<Appointment>().Property(a => a.DoctorId)
                 .IsRequired();
             modelBuilder.Entity<Appointment>().Property(a => a.PatientId)
@@ -38,9 +41,20 @@ namespace HospitalManagentApi.Persistence
                 .WithMany(p => p.Appointment)
                 .HasForeignKey(a => a.PatientId);
 
-            modelBuilder.Entity<Clinic>().Property(c => c.Id).IsRequired();
+            //clinic config
+            modelBuilder.Entity<Clinic>().Property(c => c.Name).IsRequired();
 
-            modelBuilder.Entity<Clinic>().HasMany(c => c.Doctors).WithMany(d => d.Clinic);
+           //ClinicDoctor config
+
+           modelBuilder.Entity<ClinicDoctor>()
+               .HasOne(c => c.Doctor)
+               .WithMany(d => d.Clinic)
+                .HasForeignKey(c => c.DoctorId);
+
+           modelBuilder.Entity<ClinicDoctor>()
+               .HasOne(c => c.Clinic)
+               .WithMany(c => c.Doctors)
+               .HasForeignKey(c => c.DoctorId);
 
         }
     }
