@@ -1,4 +1,5 @@
 using HospitalManagentApi.Persistence;
+using HospitalManagentApi.Persistence.Configration;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -19,6 +20,8 @@ builder.Services.AddCors(options =>
         .AllowAnyOrigin()
         .AllowAnyMethod());
 });
+
+builder.Services.AddAutoMapper(typeof(MapperConfigration));
 
 builder.Host.UseSerilog((ctx, LoggerConfiguration) =>
     LoggerConfiguration.WriteTo.Console().ReadFrom.Configuration(ctx.Configuration));

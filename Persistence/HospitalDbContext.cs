@@ -16,6 +16,7 @@ namespace HospitalManagentApi.Persistence
         public DbSet<Patient> Patient { get; set; }
         public DbSet<Doctor> Doctor { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Clinic> Clinics { get; set; }
 
 
 
@@ -36,6 +37,10 @@ namespace HospitalManagentApi.Persistence
             modelBuilder.Entity<Appointment>().HasOne(a => a.Patient)
                 .WithMany(p => p.Appointment)
                 .HasForeignKey(a => a.PatientId);
+
+            modelBuilder.Entity<Clinic>().Property(c => c.Id).IsRequired();
+
+            modelBuilder.Entity<Clinic>().HasMany(c => c.Doctors).WithMany(d => d.Clinic);
 
         }
     }
