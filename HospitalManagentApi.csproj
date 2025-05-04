@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Models\Clinic\" />
-    <Folder Include="Models\Patient\" />
   </ItemGroup>
 
 </Project>
