@@ -54,7 +54,7 @@ namespace HospitalManagentApi.Controllers
         // PUT: api/ClinicDoctors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutClinicDoctor(int id, ClinicDoctor updateClinicDoctor)
+        public async Task<IActionResult> PutClinicDoctor(int id, UpdateClinicDoctorModel updateClinicDoctor)
         {
             if (id != updateClinicDoctor.Id)
             {
