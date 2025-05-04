@@ -2,6 +2,7 @@
 using HospitalManagentApi.Core.Domain;
 using HospitalManagentApi.Models.Appointment;
 using HospitalManagentApi.Models.Clinic;
+using HospitalManagentApi.Models.ClinicDoctor;
 
 namespace HospitalManagentApi.Persistence.Configration
 {
@@ -22,6 +23,13 @@ namespace HospitalManagentApi.Persistence.Configration
             CreateMap<Clinic, CreateClinicModel>().ReverseMap();
             CreateMap<Clinic, GetClinicModel>().ReverseMap();
             CreateMap<Clinic, UpdateCLinicModel>().ReverseMap();
+
+            //ClinicDoctor Mapping
+            CreateMap<ClinicDoctor, BaseClinicDoctorModel>().ReverseMap();
+            CreateMap<ClinicDoctor, CreateClinicDoctorModel>().ReverseMap();
+            CreateMap<ClinicDoctor, ClinicDoctorModel>().ReverseMap();
+            CreateMap<ClinicDoctor, GetClinicDoctorModel>().ReverseMap();
+            CreateMap<ClinicDoctor, UpdateClinicDoctorModel>().ReverseMap();
         }
     }
 }
