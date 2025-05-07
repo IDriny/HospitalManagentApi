@@ -34,6 +34,8 @@ builder.Services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
 
 builder.Services.AddScoped<IAppointmentRepo, AppointmentRepo>();
 
+builder.Services.AddScoped<IClinicDoctorRepo, ClinicDoctorRepo>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

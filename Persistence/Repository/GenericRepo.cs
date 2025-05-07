@@ -5,9 +5,9 @@ namespace HospitalManagentApi.Persistence.Repository
 {
     public class GenericRepo <T>:IGenericRepo<T> where T : class
     {
-        private readonly HospitalDbContext _context;
+        private readonly Persistence.HospitalDbContext _context;
 
-        public GenericRepo(HospitalDbContext context)
+        public GenericRepo(Persistence.HospitalDbContext context)
         {
             _context = context;
         }

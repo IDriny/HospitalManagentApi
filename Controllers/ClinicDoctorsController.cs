@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using HospitalManagentApi.Core.Domain;
 using HospitalManagentApi.Models.ClinicDoctor;
 using HospitalManagentApi.Persistence;
+using HospitalManagentApi.Core.Contracts;
 
 namespace HospitalManagentApi.Controllers
 {
@@ -16,12 +17,12 @@ namespace HospitalManagentApi.Controllers
     [ApiController]
     public class ClinicDoctorsController : ControllerBase
     {
-        private readonly HospitalDbContext _context;
+        private readonly Core.Contracts.IClinicDoctorRepo _clinicDoctorRepo;
         private readonly IMapper _mapper;
 
-        public ClinicDoctorsController(HospitalDbContext context,IMapper mapper)
+        public ClinicDoctorsController(IClinicDoctorRepo clinicDoctorRepo,IMapper mapper)
         {
-            _context = context;
+            _clinicDoctorRepo = clinicDoctorRepo;
             _mapper = mapper;
         }
 
@@ -29,7 +30,8 @@ namespace HospitalManagentApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetClinicDoctorModel>>> GetClinicDoctors()
         {
-            var Clinics= await _context.ClinicDoctors.ToListAsync();
+            var Clinics = await _clinicDoctorRepo.GetAllAsync();
+                /*_clinicDoctorRepo.ClinicDoctors.ToListAsync();*/
             var records = _mapper.Map<List<GetClinicDoctorModel>>(Clinics);
             return Ok(records);
         }
@@ -38,7 +40,8 @@ namespace HospitalManagentApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ClinicDoctorModel>> GetClinicDoctor(int id)
         {
-            var clinicDoctor = await _context.ClinicDoctors.FindAsync(id);
+            var clinicDoctor = await _clinicDoctorRepo.GetDetailsAsync(id);
+                //_clinicDoctorRepo.ClinicDoctors.FindAsync(id);
 
             if (clinicDoctor == null)
             {
@@ -61,22 +64,23 @@ namespace HospitalManagentApi.Controllers
                 return BadRequest();
             }
 
-            var clinicDoctor = await _context.ClinicDoctors.FindAsync(id);
+            var clinicDoctor = await _clinicDoctorRepo.GetAsync(id);
+                //ClinicDoctors.FindAsync(id);
 
-            if (!ClinicDoctorExists(id))
+            if (!await ClinicDoctorExists(id))
                 return NotFound();
 
             _mapper.Map(updateClinicDoctor, clinicDoctor);
 
-            //_context.Entry(updateClinicDoctor).State = EntityState.Modified;
+            //_clinicDoctorRepo.Entry(updateClinicDoctor).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _clinicDoctorRepo.UpdateAsync(clinicDoctor);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClinicDoctorExists(id))
+                if (!await ClinicDoctorExists(id))
                 {
                     return NotFound();
                 }
@@ -95,8 +99,10 @@ namespace HospitalManagentApi.Controllers
         public async Task<ActionResult<ClinicDoctor>> PostClinicDoctor(CreateClinicDoctorModel CreatedClinicDoctor)
         {
             var clinicDoctor = _mapper.Map<ClinicDoctor>(CreatedClinicDoctor);
-            _context.ClinicDoctors.Add(clinicDoctor);
-            await _context.SaveChangesAsync();
+            //_clinicDoctorRepo.ClinicDoctors.Add(clinicDoctor);
+            //await _clinicDoctorRepo.SaveChangesAsync();
+
+            await _clinicDoctorRepo.AddAsync(clinicDoctor);
 
             return CreatedAtAction("GetClinicDoctor", new { id = clinicDoctor.Id }, clinicDoctor);
         }
@@ -105,21 +111,23 @@ namespace HospitalManagentApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteClinicDoctor(int id)
         {
-            var clinicDoctor = await _context.ClinicDoctors.FindAsync(id);
+            var clinicDoctor = await _clinicDoctorRepo.GetAsync(id);
+                //_clinicDoctorRepo.ClinicDoctors.FindAsync(id);
             if (clinicDoctor == null)
             {
                 return NotFound();
             }
 
-            _context.ClinicDoctors.Remove(clinicDoctor);
-            await _context.SaveChangesAsync();
-
+            //_clinicDoctorRepo.ClinicDoctors.Remove(clinicDoctor);
+            //await _clinicDoctorRepo.SaveChangesAsync();
+            await _clinicDoctorRepo.DeleteAsync(id);
             return NoContent();
         }
 
-        private bool ClinicDoctorExists(int id)
+        private async Task<bool> ClinicDoctorExists(int id)
         {
-            return _context.ClinicDoctors.Any(e => e.Id == id);
+            return await _clinicDoctorRepo.Exists(id);
+            //_clinicDoctorRepo.ClinicDoctors.Any(e => e.Id == id);
         }
     }
 }

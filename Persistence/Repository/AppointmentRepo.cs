@@ -6,9 +6,9 @@ namespace HospitalManagentApi.Persistence.Repository
 {
     public class AppointmentRepo:GenericRepo<Appointment>,IAppointmentRepo
     {
-        private readonly HospitalDbContext _context;
+        private readonly Persistence.HospitalDbContext _context;
 
-        public AppointmentRepo(HospitalDbContext context):base(context)
+        public AppointmentRepo(Persistence.HospitalDbContext context):base(context)
         {
             _context = context;
         }
