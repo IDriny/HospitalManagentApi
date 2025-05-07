@@ -1,5 +1,7 @@
+using HospitalManagentApi.Core.Contracts;
 using HospitalManagentApi.Persistence;
 using HospitalManagentApi.Persistence.Configration;
+using HospitalManagentApi.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -21,10 +23,16 @@ builder.Services.AddCors(options =>
         .AllowAnyMethod());
 });
 
-builder.Services.AddAutoMapper(typeof(MapperConfigration));
+
 
 builder.Host.UseSerilog((ctx, LoggerConfiguration) =>
     LoggerConfiguration.WriteTo.Console().ReadFrom.Configuration(ctx.Configuration));
+
+builder.Services.AddAutoMapper(typeof(MapperConfigration));
+
+builder.Services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
+
+builder.Services.AddScoped<IAppointmentRepo, AppointmentRepo>();
 
 var app = builder.Build();
 

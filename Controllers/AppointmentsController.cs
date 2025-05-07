@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using HospitalManagentApi.Core.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,12 +17,12 @@ namespace HospitalManagentApi.Controllers
     [ApiController]
     public class AppointmentsController : ControllerBase
     {
-        private readonly HospitalDbContext _context;
+        private readonly IAppointmentRepo _AppointmentRepo;
         private readonly IMapper _mapper;
 
-        public AppointmentsController(HospitalDbContext context,IMapper mapper)
+        public AppointmentsController(IAppointmentRepo appointmentRepo,IMapper mapper)
         {
-            _context = context;
+            _AppointmentRepo = appointmentRepo;
             _mapper = mapper;
         }
 
@@ -29,7 +30,7 @@ namespace HospitalManagentApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetAppointmentModel>>> GetAppointments()
         {
-            var appointments= await _context.Appointments.ToListAsync();
+            var appointments = await _AppointmentRepo.GetAllAsync();
             var records = _mapper.Map<List<Appointment>>(appointments);
             return Ok(records);
         }
@@ -38,8 +39,7 @@ namespace HospitalManagentApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GetAppointmentInfoModel>> GetAppointment(int id)
         {
-            var appointment = await _context.Appointments.Include(a => a.Doctor).Include(a => a.Patient)
-                .FirstOrDefaultAsync(a => a.ID == id);
+            var appointment = await _AppointmentRepo.GetDetailsAsync(id);
 
             if (appointment == null)
             {
@@ -63,19 +63,19 @@ namespace HospitalManagentApi.Controllers
                 return BadRequest();
             }
 
-            var appointment = await _context.Appointments.FindAsync(id);
-            if (!AppointmentExists(id))
+            var appointment = await _AppointmentRepo.GetAsync(id);
+            if (!await AppointmentExists(id))
                 return NotFound();
-            //_context.Entry(appointment).State = EntityState.Modified;
+            //_AppointmentRepo.Entry(appointment).State = EntityState.Modified;
             _mapper.Map(Updatedappointment, appointment);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _AppointmentRepo.UpdateAsync(appointment);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AppointmentExists(id))
+                if (!await AppointmentExists(id))
                 {
                     return NotFound();
                 }
@@ -94,8 +94,9 @@ namespace HospitalManagentApi.Controllers
         public async Task<ActionResult<Appointment>> PostAppointment(CreateAppointmentModel CreatedAppointment)
         {
             var appointment = _mapper.Map<Appointment>(CreatedAppointment);
-            _context.Appointments.Add(appointment);
-            await _context.SaveChangesAsync();
+            //_AppointmentRepo.Appointments.Add(appointment);
+            //await _AppointmentRepo.SaveChangesAsync();
+            await _AppointmentRepo.AddAsync(appointment);
 
             return CreatedAtAction("GetAppointment", new { id = appointment.ID }, appointment);
         }
@@ -104,21 +105,22 @@ namespace HospitalManagentApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAppointment(int id)
         {
-            var appointment = await _context.Appointments.FindAsync(id);
+            var appointment = await _AppointmentRepo.GetAsync(id);
             if (appointment == null)
             {
                 return NotFound();
             }
 
-            _context.Appointments.Remove(appointment);
-            await _context.SaveChangesAsync();
+            //_AppointmentRepo.Appointments.Remove(appointment);
+            //await _AppointmentRepo.SaveChangesAsync();
+            await _AppointmentRepo.DeleteAsync(id);
 
             return NoContent();
         }
 
-        private bool AppointmentExists(int id)
+        private async Task<bool> AppointmentExists(int id)
         {
-            return _context.Appointments.Any(e => e.ID == id);
+            return await _AppointmentRepo.Exists(id);
         }
     }
 }
