@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using HospitalManagentApi.Core.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +19,12 @@ namespace HospitalManagentApi.Controllers
     [ApiController]
     public class DoctorsController : ControllerBase
     {
-        private readonly HospitalDbContext _context;
+        private readonly IDoctorRepo _doctorRepo;
         private readonly IMapper _mapper;
 
-        public DoctorsController(HospitalDbContext context,IMapper mapper)
+        public DoctorsController(IDoctorRepo doctorRepo,IMapper mapper)
         {
-            _context = context;
+            _doctorRepo = doctorRepo;
             _mapper = mapper;
         }
 
@@ -31,7 +32,8 @@ namespace HospitalManagentApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetDoctorModel>>> GetDoctor()
         {
-            var doctors= await _context.Doctor.ToListAsync();
+            var doctors = await _doctorRepo.GetAllAsync();
+                //_doctorRepo.Doctor.ToListAsync();
             var records = _mapper.Map<List<GetDoctorModel>>(doctors);
 
 
@@ -43,17 +45,18 @@ namespace HospitalManagentApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<DoctorModel>> GetDoctor(int id)
         {
-            var doctor = await _context.Doctor.FindAsync(id);
+            var doctor = await _doctorRepo.GetDetailsAsync(id);
+                //_doctorRepo.Doctor.FindAsync(id);
 
             if (doctor == null)
             {
                 return NotFound();
             }
             var record = _mapper.Map<DoctorModel>(doctor);
-            var Appoint = await _context.Appointments.Where(a => a.DoctorId == doctor.Id).ToListAsync();
-            var Clinic = await _context.ClinicDoctors.Where(c => c.DoctorId == doctor.Id).ToListAsync();
-            record.Appointment = _mapper.Map<List<GetAppointmentModel>>(Appoint);
-            record.Clinic = _mapper.Map<List<GetClinicDoctorModel>>(Clinic);
+            //var Appoint = await _doctorRepo.Appointments.Where(a => a.DoctorId == doctor.Id).ToListAsync();
+            //var Clinic = await _doctorRepo.ClinicDoctors.Where(c => c.DoctorId == doctor.Id).ToListAsync();
+            //record.Appointment = _mapper.Map<List<GetAppointmentModel>>(Appoint);
+            //record.Clinic = _mapper.Map<List<GetClinicDoctorModel>>(Clinic);
             return Ok(record);
         }
 
@@ -67,21 +70,23 @@ namespace HospitalManagentApi.Controllers
                 return BadRequest();
             }
 
-            var doctor = await _context.Doctor.FindAsync(id);
-            if (!DoctorExists(id))
+            var doctor = await _doctorRepo.GetAsync(id);
+                //_doctorRepo.Doctor.FindAsync(id);
+            if (!await DoctorExists(id))
                 return NotFound();
 
             _mapper.Map(updateDoctor, doctor);
 
-            //_context.Entry(updateDoctor).State = EntityState.Modified;
+            //_doctorRepo.Entry(updateDoctor).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _doctorRepo.UpdateAsync(doctor);
+                //_doctorRepo.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DoctorExists(id))
+                if (!await DoctorExists(id))
                 {
                     return NotFound();
                 }
@@ -100,8 +105,9 @@ namespace HospitalManagentApi.Controllers
         public async Task<ActionResult<Doctor>> PostDoctor(CreateDoctorModel NewDoctor)
         {
             var doctor = _mapper.Map<Doctor>(NewDoctor);
-            _context.Doctor.Add(doctor);
-            await _context.SaveChangesAsync();
+            //_doctorRepo.Doctor.Add(doctor);
+            //await _doctorRepo.SaveChangesAsync();
+            await _doctorRepo.AddAsync(doctor);
 
             return CreatedAtAction("GetDoctor", new { id = doctor.Id }, doctor);
         }
@@ -110,21 +116,24 @@ namespace HospitalManagentApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDoctor(int id)
         {
-            var doctor = await _context.Doctor.FindAsync(id);
+            var doctor = await _doctorRepo.GetAsync(id);
+                //_doctorRepo.Doctor.FindAsync(id);
             if (doctor == null)
             {
                 return NotFound();
             }
 
-            _context.Doctor.Remove(doctor);
-            await _context.SaveChangesAsync();
+            //_doctorRepo.Doctor.Remove(doctor);
+            //await _doctorRepo.SaveChangesAsync();
+            _doctorRepo.DeleteAsync(id);
 
             return NoContent();
         }
 
-        private bool DoctorExists(int id)
+        private async Task<bool> DoctorExists(int id)
         {
-            return _context.Doctor.Any(e => e.Id == id);
+            return await _doctorRepo.Exists(id);
+            //_doctorRepo.Doctor.Any(e => e.Id == id);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using HospitalManagentApi.Core.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,12 +18,12 @@ namespace HospitalManagentApi.Controllers
     [ApiController]
     public class PatientsController : ControllerBase
     {
-        private readonly HospitalDbContext _context;
+        private readonly IPatientRepo _patientRepo;
         private readonly IMapper _mapper;
 
-        public PatientsController(HospitalDbContext context, IMapper mapper)
+        public PatientsController(IPatientRepo patientRepo, IMapper mapper)
         {
-            _context = context;
+            _patientRepo = patientRepo;
             _mapper = mapper;
         }
 
@@ -30,7 +31,8 @@ namespace HospitalManagentApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetPatientModel>>> GetPatient()
         {
-            var patients= await _context.Patient.ToListAsync();
+            var patients = await _patientRepo.GetAllAsync();
+                //_patientRepo.Patient.ToListAsync();
             var records = _mapper.Map<List<GetPatientModel>>(patients);
             return Ok(records);
         }
@@ -39,7 +41,8 @@ namespace HospitalManagentApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PatientModel>> GetPatient(int id)
         {
-            var patient = await _context.Patient.FindAsync(id);
+            var patient = await _patientRepo.GetDetailsAsync(id);
+                //_patientRepo.Patient.FindAsync(id);
 
             if (patient == null)
             {
@@ -47,8 +50,10 @@ namespace HospitalManagentApi.Controllers
             }
 
             var record = _mapper.Map<PatientModel>(patient);
-            var Appoint= await _context.Appointments.Where(a => a.PatientId == patient.Id).ToListAsync();
-            record.Appointment = _mapper.Map<List<GetAppointmentModel>>(Appoint);
+            //var Appoint= await _patientRepo.Appointments.Where(a => a.PatientId == patient.Id).ToListAsync();
+            //record.Appointment = _mapper.Map<List<GetAppointmentModel>>(Appoint);
+
+
             return Ok(record);
         }
 
@@ -61,22 +66,25 @@ namespace HospitalManagentApi.Controllers
             {
                 return BadRequest();
             }
-            var patient=await _context.Patient.FindAsync(id);
 
-            if (!PatientExists(id))
+            var patient = await _patientRepo.GetAsync(id);
+                //_patientRepo.Patient.FindAsync(id);
+
+            if (!await PatientExists(id))
                 return NotFound();
 
             _mapper.Map(updatePatient, patient);
             
-            //_context.Entry(updatePatient).State = EntityState.Modified;
+            //_patientRepo.Entry(updatePatient).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _patientRepo.UpdateAsync(patient);
+                //_patientRepo.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PatientExists(id))
+                if (!await PatientExists(id))
                 {
                     return NotFound();
                 }
@@ -95,8 +103,10 @@ namespace HospitalManagentApi.Controllers
         public async Task<ActionResult<Patient>> PostPatient(CreatePatientModel NewPatient)
         {
             var patient = _mapper.Map<Patient>(NewPatient);
-            _context.Patient.Add(patient);
-            await _context.SaveChangesAsync();
+            await _patientRepo.AddAsync(patient);
+            
+            //_patientRepo.Patient.Add(patient);
+            //await _patientRepo.SaveChangesAsync();
 
             return CreatedAtAction("GetPatient", new { id = patient.Id }, patient);
         }
@@ -105,21 +115,24 @@ namespace HospitalManagentApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePatient(int id)
         {
-            var patient = await _context.Patient.FindAsync(id);
+            var patient = await _patientRepo.GetAsync(id);
+                //_patientRepo.Patient.FindAsync(id);
             if (patient == null)
             {
                 return NotFound();
             }
 
-            _context.Patient.Remove(patient);
-            await _context.SaveChangesAsync();
+            //_patientRepo.Patient.Remove(patient);
+            //await _patientRepo.SaveChangesAsync();
+
+            _patientRepo.DeleteAsync(id);
 
             return NoContent();
         }
 
-        private bool PatientExists(int id)
+        private async Task<bool> PatientExists(int id)
         {
-            return _context.Patient.Any(e => e.Id == id);
+            return await _patientRepo.Exists(id);
         }
     }
 }

@@ -38,6 +38,10 @@ builder.Services.AddScoped<IClinicDoctorRepo, ClinicDoctorRepo>();
 
 builder.Services.AddScoped<IClinicRepo, ClinicRepo>();
 
+builder.Services.AddScoped<IDoctorRepo, DoctorRepo>();
+
+builder.Services.AddScoped<IPatientRepo, PatientRepo>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
