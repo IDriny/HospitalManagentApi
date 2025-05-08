@@ -6,6 +6,7 @@ namespace HospitalManagentApi.Core.Domain
     {
         public int Id { get; set; }
         public string Description { get; set; }
+        public DateTime Date { get; set; }
         public int PatientID { get; set; }
         public Patient Patient { get; set; }
     }
