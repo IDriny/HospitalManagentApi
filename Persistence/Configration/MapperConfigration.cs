@@ -6,6 +6,7 @@ using HospitalManagentApi.Models.ClinicDoctor;
 using HospitalManagentApi.Models.Diagnosis;
 using HospitalManagentApi.Models.Doctor;
 using HospitalManagentApi.Models.Patient;
+using HospitalManagentApi.Models.Prescription;
 
 namespace HospitalManagentApi.Persistence.Configration
 {
@@ -54,6 +55,13 @@ namespace HospitalManagentApi.Persistence.Configration
             CreateMap<Diagnosis, DiagnosisModel>().ReverseMap();
             CreateMap<Diagnosis, CreateDiagnosisModel>().ReverseMap();
             CreateMap<Diagnosis, UpdateDiagnosisModel>().ReverseMap();
+
+            //Prescription Mapping
+            CreateMap<Prescription, BasePrescriptionModel>().ReverseMap();
+            CreateMap<Prescription, PrescriptionModel>().ReverseMap();
+            CreateMap<Prescription, GetPrescriptionModel>().ReverseMap();
+            CreateMap<Prescription, CreatePrescriptionModel>().ReverseMap();
+            CreateMap<Prescription, UpdatePrescriptionModel>().ReverseMap();
 
 
 
