@@ -9,5 +9,7 @@
         public string Phone_Number { get; set; }
         public string Email { get; set; }
         public IList<Appointment> Appointment { get; set; }
+        public IList<Diagnosis> Diagnoses { get; set; }
+        public IList<Prescription> Prescriptions { get; set; }
     }
 }

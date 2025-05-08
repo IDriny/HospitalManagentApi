@@ -4,6 +4,7 @@ using HospitalManagentApi.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HospitalManagentApi.Migrations
 {
     [DbContext(typeof(HospitalDbContext))]
-    partial class HospitalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250508074132_AddDiagnosisTable")]
+    partial class AddDiagnosisTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,28 +183,6 @@ namespace HospitalManagentApi.Migrations
                     b.ToTable("Patient");
                 });
 
-            modelBuilder.Entity("HospitalManagentApi.Core.Domain.Prescription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("Prescriptions");
-                });
-
             modelBuilder.Entity("HospitalManagentApi.Core.Domain.Appointment", b =>
                 {
                     b.HasOne("HospitalManagentApi.Core.Domain.Doctor", "Doctor")
@@ -251,17 +232,6 @@ namespace HospitalManagentApi.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("HospitalManagentApi.Core.Domain.Prescription", b =>
-                {
-                    b.HasOne("HospitalManagentApi.Core.Domain.Patient", "Patient")
-                        .WithMany("Prescriptions")
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Patient");
-                });
-
             modelBuilder.Entity("HospitalManagentApi.Core.Domain.Clinic", b =>
                 {
                     b.Navigation("Doctors");
@@ -279,8 +249,6 @@ namespace HospitalManagentApi.Migrations
                     b.Navigation("Appointment");
 
                     b.Navigation("Diagnoses");
-
-                    b.Navigation("Prescriptions");
                 });
 #pragma warning restore 612, 618
         }
