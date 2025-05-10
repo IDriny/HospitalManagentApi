@@ -74,6 +74,7 @@ namespace HospitalManagentApi.Controllers
                 return NotFound();
 
             _mapper.Map(updatePatient, patient);
+            patient.FullName = updatePatient.fName + " " + updatePatient.lName;
             
             //_patientRepo.Entry(updatePatient).State = EntityState.Modified;
 
@@ -103,6 +104,7 @@ namespace HospitalManagentApi.Controllers
         public async Task<ActionResult<Patient>> PostPatient(CreatePatientModel NewPatient)
         {
             var patient = _mapper.Map<Patient>(NewPatient);
+            patient.FullName = NewPatient.fName + " " + NewPatient.lName;
             await _patientRepo.AddAsync(patient);
             
             //_patientRepo.Patient.Add(patient);

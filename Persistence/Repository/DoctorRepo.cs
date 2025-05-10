@@ -15,7 +15,7 @@ namespace HospitalManagentApi.Persistence.Repository
 
         public async Task<Doctor> GetDetailsAsync(int id)
         {
-            return await _context.Doctor.Include(d => d.Appointment).FirstOrDefaultAsync(d => d.Id == id);
+            return await _context.Doctor.Include(d => d.Appointment).Include(d=>d.Clinic).FirstOrDefaultAsync(d => d.Id == id);
         }
     }
 }
