@@ -10,9 +10,9 @@ using HospitalManagentApi.Models.Prescription;
 
 namespace HospitalManagentApi.Persistence.Configration
 {
-    public class MapperConfigration:Profile
+    public class MapperConfiguration:Profile
     {
-        public MapperConfigration()
+        public MapperConfiguration()
         {
             //Appointment Mapping
             CreateMap<Appointment, BaseAppointmentModel>().ReverseMap();

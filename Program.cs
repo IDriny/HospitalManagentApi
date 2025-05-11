@@ -28,7 +28,7 @@ builder.Services.AddCors(options =>
 builder.Host.UseSerilog((ctx, LoggerConfiguration) =>
     LoggerConfiguration.WriteTo.Console().ReadFrom.Configuration(ctx.Configuration));
 
-builder.Services.AddAutoMapper(typeof(MapperConfigration));
+builder.Services.AddAutoMapper(typeof(MapperConfiguration));
 
 builder.Services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
 
