@@ -53,6 +53,8 @@ builder.Services.AddScoped<IDiagnosisRepo, DiagnosisRepo>();
 
 builder.Services.AddScoped<IPrescriptionRepo, PrescriptionRepo>();
 
+builder.Services.AddScoped<IAuthManager, AuthManager>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -104,7 +104,7 @@ namespace HospitalManagentApi.Controllers
         public async Task<ActionResult<Patient>> PostPatient(CreatePatientModel NewPatient)
         {
             var patient = _mapper.Map<Patient>(NewPatient);
-            patient.FullName = NewPatient.fName + " " + NewPatient.lName;
+            patient.FullName = NewPatient.FirstName + " " + NewPatient.LastName;
             await _patientRepo.AddAsync(patient);
             
             //_patientRepo.Patient.Add(patient);

@@ -3,6 +3,7 @@ using HospitalManagentApi.Persistence.Configration;
 using HospitalManagentApi.Persistence.Configuration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace HospitalManagentApi.Persistence
 {
@@ -27,14 +28,17 @@ namespace HospitalManagentApi.Persistence
 
 
 
-        protected void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new AppointmentConfiguration());
             modelBuilder.ApplyConfiguration(new ClinicConfiguration());
             modelBuilder.ApplyConfiguration(new ClinicDoctorsConfiguration());
             modelBuilder.ApplyConfiguration(new DiagnosisConfiguration());
             modelBuilder.ApplyConfiguration(new PrescriptionConfiguration());
 
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            /*
             //Appointment Configration
             //modelBuilder.Entity<Appointment>().Property(a => a.DoctorId)
             //    .IsRequired();
@@ -81,8 +85,13 @@ namespace HospitalManagentApi.Persistence
             //modelBuilder.Entity<Prescription>().HasOne(p => p.Patient)
             //   .WithMany(p => p.Prescriptions)
             //   .HasForeignKey(p => p.PatientId);
+            */
 
-
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.ConfigureWarnings(warnings =>
+                warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
         }
     }
 }

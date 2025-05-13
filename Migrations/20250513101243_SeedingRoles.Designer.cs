@@ -4,6 +4,7 @@ using HospitalManagentApi.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HospitalManagentApi.Migrations
 {
     [DbContext(typeof(HospitalDbContext))]
-    partial class HospitalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250513101243_SeedingRoles")]
+    partial class SeedingRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,19 +236,19 @@ namespace HospitalManagentApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("Phone_Number")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
+                    b.Property<string>("fName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("lName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -308,13 +311,13 @@ namespace HospitalManagentApi.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6e46f199-75ab-46af-a66f-51d0efa73881",
+                            Id = "602c9c77-c088-47b2-b315-cd752ca1e791",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "08370a7f-957c-4063-af31-431e250f6a7f",
+                            Id = "664e4db0-f0ec-429a-84ce-cbd2e3d3e545",
                             Name = "User",
                             NormalizedName = "USER"
                         });
