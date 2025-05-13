@@ -45,7 +45,7 @@ namespace HospitalManagentApi.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Appointments", (string)null);
                 });
 
             modelBuilder.Entity("HospitalManagentApi.Core.Domain.Clinic", b =>
@@ -66,7 +66,7 @@ namespace HospitalManagentApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clinics");
+                    b.ToTable("Clinics", (string)null);
                 });
 
             modelBuilder.Entity("HospitalManagentApi.Core.Domain.ClinicDoctor", b =>
@@ -89,7 +89,7 @@ namespace HospitalManagentApi.Migrations
 
                     b.HasIndex("DoctorId");
 
-                    b.ToTable("ClinicDoctors");
+                    b.ToTable("ClinicDoctors", (string)null);
                 });
 
             modelBuilder.Entity("HospitalManagentApi.Core.Domain.Diagnosis", b =>
@@ -114,7 +114,7 @@ namespace HospitalManagentApi.Migrations
 
                     b.HasIndex("PatientID");
 
-                    b.ToTable("Diagnoses");
+                    b.ToTable("Diagnoses", (string)null);
                 });
 
             modelBuilder.Entity("HospitalManagentApi.Core.Domain.Doctor", b =>
@@ -147,7 +147,7 @@ namespace HospitalManagentApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Doctor");
+                    b.ToTable("Doctor", (string)null);
                 });
 
             modelBuilder.Entity("HospitalManagentApi.Core.Domain.Patient", b =>
@@ -180,7 +180,7 @@ namespace HospitalManagentApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Patient");
+                    b.ToTable("Patient", (string)null);
                 });
 
             modelBuilder.Entity("HospitalManagentApi.Core.Domain.Prescription", b =>
@@ -205,7 +205,7 @@ namespace HospitalManagentApi.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Prescriptions");
+                    b.ToTable("Prescriptions", (string)null);
                 });
 
             modelBuilder.Entity("HospitalManagentApi.Core.Domain.Appointment", b =>

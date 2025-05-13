@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using HospitalManagentApi.Core.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,12 +17,12 @@ namespace HospitalManagentApi.Controllers
     [ApiController]
     public class DiagnosesController : ControllerBase
     {
-        private readonly HospitalDbContext _context;
+        private readonly IDiagnosisRepo _diagnosisRepo;
         private readonly IMapper _mapper;
 
-        public DiagnosesController(HospitalDbContext context,IMapper mapper)
+        public DiagnosesController(IDiagnosisRepo _diagnosisRepo,IMapper mapper)
         {
-            _context = context;
+            this._diagnosisRepo = _diagnosisRepo;
             _mapper = mapper;
         }
 
@@ -29,7 +30,7 @@ namespace HospitalManagentApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetDiagnosisModel>>> GetDiagnoses()
         {
-            var diagnoses= await _context.Diagnoses.ToListAsync();
+            var diagnoses = await _diagnosisRepo.GetAllAsync();
             var records = _mapper.Map<List<GetDiagnosisModel>>(diagnoses);
             return Ok(records);
         }
@@ -38,7 +39,8 @@ namespace HospitalManagentApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<DiagnosisModel>> GetDiagnosis(int id)
         {
-            var diagnosis = await _context.Diagnoses.Include(d=>d.Patient).FirstOrDefaultAsync(p=>p.Id==id);
+            var diagnosis = await _diagnosisRepo.GetDiagnosisDetailsAsync(id);
+                //_context.Diagnoses.Include(d=>d.Patient).FirstOrDefaultAsync(p=>p.Id==id);
 
             if (diagnosis == null)
             {
@@ -61,9 +63,10 @@ namespace HospitalManagentApi.Controllers
                 return BadRequest();
             }
 
-            var diagnosis = await _context.Diagnoses.FindAsync(id);
+            var diagnosis = await _diagnosisRepo.GetAsync(id);
+                //_context.Diagnoses.FindAsync(id);
             
-            if (!DiagnosisExists(id))
+            if (!await DiagnosisExists(id))
                 return NotFound();
 
             //_context.Entry(diagnosis).State = EntityState.Modified;
@@ -73,11 +76,12 @@ namespace HospitalManagentApi.Controllers
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _diagnosisRepo.UpdateAsync(diagnosis);
+                //_context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DiagnosisExists(id))
+                if (!await DiagnosisExists(id))
                 {
                     return NotFound();
                 }
@@ -96,8 +100,11 @@ namespace HospitalManagentApi.Controllers
         public async Task<ActionResult<Diagnosis>> PostDiagnosis(CreateDiagnosisModel createDiagnosis)
         {
             var diagnosis = _mapper.Map<Diagnosis>(createDiagnosis);
-            _context.Diagnoses.Add(diagnosis);
-            await _context.SaveChangesAsync();
+
+            await _diagnosisRepo.AddAsync(diagnosis);
+            
+            //_context.Diagnoses.Add(diagnosis);
+            //await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetDiagnosis", new { id = diagnosis.Id }, diagnosis);
         }
@@ -106,21 +113,24 @@ namespace HospitalManagentApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDiagnosis(int id)
         {
-            var diagnosis = await _context.Diagnoses.FindAsync(id);
+            var diagnosis = await _diagnosisRepo.GetAsync(id);
+                //_context.Diagnoses.FindAsync(id);
             if (diagnosis == null)
             {
                 return NotFound();
             }
 
-            _context.Diagnoses.Remove(diagnosis);
-            await _context.SaveChangesAsync();
+            await _diagnosisRepo.DeleteAsync(diagnosis.Id);
+            //_context.Diagnoses.Remove(diagnosis);
+            //await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool DiagnosisExists(int id)
+        private async Task<bool>DiagnosisExists(int id)
         {
-            return _context.Diagnoses.Any(e => e.Id == id);
+            return await _diagnosisRepo.Exists(id);
+            //_context.Diagnoses.Any(e => e.Id == id);
         }
     }
 }

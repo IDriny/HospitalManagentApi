@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using HospitalManagentApi.Core.Domain;
 using HospitalManagentApi.Persistence;
 using AutoMapper;
+using HospitalManagentApi.Core.Contracts;
 using HospitalManagentApi.Models.Prescription;
 using Microsoft.OpenApi.Validations;
 
@@ -17,12 +18,12 @@ namespace HospitalManagentApi.Controllers
     [ApiController]
     public class PrescriptionsController : ControllerBase
     {
-        private readonly HospitalDbContext _context;
+        private readonly IPrescriptionRepo _prescriptionRepo;
         private readonly IMapper _mapper;
 
-        public PrescriptionsController(HospitalDbContext context,IMapper mapper)
+        public PrescriptionsController(IPrescriptionRepo prescriptionRepo,IMapper mapper)
         {
-            _context = context;
+            _prescriptionRepo = prescriptionRepo;
             _mapper = mapper;
         }
 
@@ -30,7 +31,8 @@ namespace HospitalManagentApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetPrescriptionModel>>> GetPrescriptions()
         {
-            var prescription= await _context.Prescriptions.ToListAsync();
+            var prescription = await _prescriptionRepo.GetAllAsync();
+                //_context.Prescriptions.ToListAsync();
             var record = _mapper.Map<List<GetPrescriptionModel>>(prescription);
             return Ok(record);
         }
@@ -39,7 +41,8 @@ namespace HospitalManagentApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PrescriptionModel>> GetPrescription(int id)
         {
-            var prescription = await _context.Prescriptions.Include(p=>p.Patient).FirstOrDefaultAsync(p=>p.Id==id);
+            var prescription = await _prescriptionRepo.GetPrescriptionDetalils(id);
+                //_context.Prescriptions.Include(p=>p.Patient).FirstOrDefaultAsync(p=>p.Id==id);
 
             if (prescription == null)
             {
@@ -60,8 +63,9 @@ namespace HospitalManagentApi.Controllers
                 return BadRequest();
             }
 
-           var Prescription=await _context.Prescriptions.FindAsync(id);
-            if(!PrescriptionExists(id))
+            var Prescription = await _prescriptionRepo.GetAsync(id);
+           //_context.Prescriptions.FindAsync(id);
+            if(!await PrescriptionExists(id))
                 return NotFound();
 
             _mapper.Map(updatePrescription, Prescription);
@@ -69,11 +73,12 @@ namespace HospitalManagentApi.Controllers
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _prescriptionRepo.UpdateAsync(Prescription);
+                //_context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PrescriptionExists(id))
+                if (!await PrescriptionExists(id))
                 {
                     return NotFound();
                 }
@@ -92,8 +97,10 @@ namespace HospitalManagentApi.Controllers
         public async Task<ActionResult<Prescription>> PostPrescription(CreatePrescriptionModel createPrescription)
         {
             var prescription =_mapper.Map<Prescription>(createPrescription);
-            _context.Prescriptions.Add(prescription);
-            await _context.SaveChangesAsync();
+
+            await _prescriptionRepo.AddAsync(prescription);
+            //_context.Prescriptions.Add(prescription);
+            //await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPrescription", new { id = prescription.Id }, prescription);
         }
@@ -102,21 +109,23 @@ namespace HospitalManagentApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePrescription(int id)
         {
-            var prescription = await _context.Prescriptions.FindAsync(id);
+            var prescription = await _prescriptionRepo.GetAsync(id);
+            //_context.Prescriptions.FindAsync(id);
             if (prescription == null)
             {
                 return NotFound();
             }
 
-            _context.Prescriptions.Remove(prescription);
-            await _context.SaveChangesAsync();
+            await _prescriptionRepo.DeleteAsync(id);
+            //_context.Prescriptions.Remove(prescription);
+            //await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool PrescriptionExists(int id)
+        private async Task<bool> PrescriptionExists(int id)
         {
-            return _context.Prescriptions.Any(e => e.Id == id);
+            return await _prescriptionRepo.Exists(id);
         }
     }
 }

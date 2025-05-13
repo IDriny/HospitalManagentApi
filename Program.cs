@@ -1,7 +1,9 @@
 using HospitalManagentApi.Core.Contracts;
+using HospitalManagentApi.Core.Domain;
 using HospitalManagentApi.Persistence;
 using HospitalManagentApi.Persistence.Configration;
 using HospitalManagentApi.Persistence.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -10,6 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("HospitalDbConnectionString");
 builder.Services.AddDbContext<HospitalDbContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddIdentityCore<ApiUser>()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<HospitalDbContext>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -41,6 +48,10 @@ builder.Services.AddScoped<IClinicRepo, ClinicRepo>();
 builder.Services.AddScoped<IDoctorRepo, DoctorRepo>();
 
 builder.Services.AddScoped<IPatientRepo, PatientRepo>();
+
+builder.Services.AddScoped<IDiagnosisRepo, DiagnosisRepo>();
+
+builder.Services.AddScoped<IPrescriptionRepo, PrescriptionRepo>();
 
 var app = builder.Build();
 

@@ -1,11 +1,12 @@
 ﻿using HospitalManagentApi.Core.Domain;
 using HospitalManagentApi.Persistence.Configration;
 using HospitalManagentApi.Persistence.Configuration;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HospitalManagentApi.Persistence
 {
-    public class HospitalDbContext : DbContext
+    public class HospitalDbContext : IdentityDbContext<ApiUser>
     {
 
 
