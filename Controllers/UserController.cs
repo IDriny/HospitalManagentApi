@@ -23,6 +23,7 @@ namespace HospitalManagentApi.Controllers
             _patientRepo = patientRepo;
         }
 
+        //api/User/SignUp
         [HttpPost]
         [Route("SignUp")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -50,6 +51,23 @@ namespace HospitalManagentApi.Controllers
                 return BadRequest();
             }
             return Ok();
+        }
+
+        //api/User/SignIn
+        [HttpPost]
+        [Route("SignIn")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> SignIn([FromBody] LogInModel userModel)
+        {
+            var authResponse = await _authManager.SignIn(userModel);
+            if (authResponse == null)
+            {
+                return Unauthorized();
+            }
+            return Ok(authResponse);
         }
 
     }

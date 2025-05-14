@@ -1,10 +1,13 @@
+using System.Text;
 using HospitalManagentApi.Core.Contracts;
 using HospitalManagentApi.Core.Domain;
 using HospitalManagentApi.Persistence;
 using HospitalManagentApi.Persistence.Configration;
 using HospitalManagentApi.Persistence.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,6 +57,29 @@ builder.Services.AddScoped<IDiagnosisRepo, DiagnosisRepo>();
 builder.Services.AddScoped<IPrescriptionRepo, PrescriptionRepo>();
 
 builder.Services.AddScoped<IAuthManager, AuthManager>();
+
+builder.Services.AddAuthentication(options =>
+{
+    //"Bearer"
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero,
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
+
+
+
+    };
+});
 
 var app = builder.Build();
 
