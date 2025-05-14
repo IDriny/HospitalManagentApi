@@ -63,20 +63,64 @@ namespace HospitalManagentApi.Persistence.Repository
             var userClaims = await _userManager.GetClaimsAsync(user);
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email)
+                //new Claim(JwtRegisteredClaimNames.Sub, user.FirstName+" "+user.LastName),
+                //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("UserId",user.Id)
             }.Union(userClaims).Union(roleClaims);
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["JwtSettings:Issuer"],
                 audience: _configuration["JwtSettings:Audience"],
                 claims:claims,
-                expires:DateTime.Now.AddDays(Convert.ToInt32(_configuration["JwtSettings:DurationInDays"])),
+                expires:DateTime.Now.AddHours(Convert.ToInt32(_configuration["JwtSettings:DurationInDays"])),
                 signingCredentials:credentials
                 );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<UserTokenModel> GetUserInfoFromToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var validationParams = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+                ValidIssuer = _configuration["JwtSettings:Issuer"],
+                ValidAudience = _configuration["JwtSettings:Audience"],
+                IssuerSigningKey =
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]))
+            };
+            var principal = handler.ValidateTokenAsync(token, validationParams);
+            if (!principal.Result.IsValid)
+            {
+                return null;
+            }
+            var jsonToken = handler.ReadJwtToken(token);
+            var tokens = jsonToken as JwtSecurityToken;
+            var user = new UserTokenModel
+            {
+                UserId = tokens.Claims.First(c => c.Type == "UserId").Value,
+                Email = tokens.Claims.First(c => c.Type == "email").Value
+            };
+            return user;
+        }
+
+        public async Task<GetUserModel> IsValidUser(UserTokenModel userToken)
+        {
+
+            _user = await _userManager.FindByIdAsync(userToken.UserId);
+            //var validUser =await _userManager.FindByIdAsync(userToken.UserId);
+            if (_user.Email != userToken.Email || _user.Id != userToken.UserId)
+            {
+                return null;
+            }
+            var user = _mapper.Map<GetUserModel>(_user);
+            return user;
         }
         
     }

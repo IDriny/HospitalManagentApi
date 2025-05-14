@@ -68,6 +68,7 @@ namespace HospitalManagentApi.Persistence.Configration
             CreateMap<ApiUser, SignUpModel>().ReverseMap();
             CreateMap<ApiUser, LogInModel>().ReverseMap();
             CreateMap<ApiUser, CreatePatientModel>().ReverseMap();
+            CreateMap<ApiUser, GetUserModel>().ReverseMap();
 
         }
     }

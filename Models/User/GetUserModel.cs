@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HospitalManagentApi.Models.Patient
+namespace HospitalManagentApi.Models.User
 {
-    public class CreatePatientModel
+    public class GetUserModel
     {
+        public string Id { get; set; }
+
         public string FirstName { get; set; }
+        
         public string LastName { get; set; }
         [Phone]
         public string PhoneNumber { get; set; }

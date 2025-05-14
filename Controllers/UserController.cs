@@ -3,6 +3,7 @@ using HospitalManagentApi.Core.Contracts;
 using HospitalManagentApi.Core.Domain;
 using HospitalManagentApi.Models.Patient;
 using HospitalManagentApi.Models.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,6 +36,7 @@ namespace HospitalManagentApi.Controllers
             var patient = _mapper.Map<CreatePatientModel>(user);
             var addedPatient = _mapper.Map<Patient>(patient);
             addedPatient.FullName = patient.FirstName + " " + patient.LastName;
+            addedPatient.PhoneNumber=patient.PhoneNumber;
             if (!await _patientRepo.ExistByEmailAsync(addedPatient.Email))
             {
                 await _patientRepo.AddAsync(addedPatient);
@@ -69,6 +71,24 @@ namespace HospitalManagentApi.Controllers
             }
             return Ok(authResponse);
         }
+
+        //api/user/Get
+        [HttpGet("token")]
+        public async Task<ActionResult<GetUserModel>> GetUser(string token)
+        {
+            var userInfo = await _authManager.GetUserInfoFromToken(token);
+            if (userInfo == null)
+            {
+                return Unauthorized();
+            }
+            var user = await _authManager.IsValidUser(userInfo);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            return Ok(user);
+        }
+
 
     }
 }

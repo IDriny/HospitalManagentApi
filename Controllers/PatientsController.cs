@@ -38,10 +38,10 @@ namespace HospitalManagentApi.Controllers
         }
 
         // GET: api/Patients/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<PatientModel>> GetPatient(int id)
+        [HttpGet("{Email}")]
+        public async Task<ActionResult<PatientModel>> GetPatient(string Email)
         {
-            var patient = await _patientRepo.GetDetailsAsync(id);
+            var patient = await _patientRepo.GetDetailsAsync(Email);
                 //_patientRepo.Patient.FindAsync(id);
 
             if (patient == null)
