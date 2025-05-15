@@ -74,7 +74,7 @@ namespace HospitalManagentApi.Controllers
                 return NotFound();
 
             _mapper.Map(updatePatient, patient);
-            patient.FullName = updatePatient.fName + " " + updatePatient.lName;
+            patient.FullName = updatePatient.FirstName+ " " + updatePatient.LastName;
             
             //_patientRepo.Entry(updatePatient).State = EntityState.Modified;
 

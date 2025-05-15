@@ -72,21 +72,18 @@ namespace HospitalManagentApi.Controllers
             return Ok(authResponse);
         }
 
-        //api/user/Get
-        [HttpGet("token")]
-        public async Task<ActionResult<GetUserModel>> GetUser(string token)
+        //api/user/Post/GetUser
+        [HttpPost]
+        [Route("GetUser")]
+        public async Task<ActionResult<GetUserModel>> GetUser(AuthResponseModel request)
         {
-            var userInfo = await _authManager.GetUserInfoFromToken(token);
+            var userInfo = await _authManager.GetUserInfoFromToken(request);
             if (userInfo == null)
             {
                 return Unauthorized();
             }
-            var user = await _authManager.IsValidUser(userInfo);
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-            return Ok(user);
+
+            return Ok(userInfo);
         }
 
 

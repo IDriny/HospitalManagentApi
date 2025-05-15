@@ -18,7 +18,9 @@ builder.Services.AddDbContext<HospitalDbContext>(options => options.UseSqlServer
 
 builder.Services.AddIdentityCore<ApiUser>()
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<HospitalDbContext>();
+    .AddTokenProvider<DataProtectorTokenProvider<ApiUser>>("HospitalManagementAPI")
+    .AddEntityFrameworkStores<HospitalDbContext>()
+    .AddDefaultTokenProviders();
 
 
 builder.Services.AddControllers();
