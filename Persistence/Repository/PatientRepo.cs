@@ -19,7 +19,7 @@ namespace HospitalManagentApi.Persistence.Repository
 
         public async Task<Patient> GetDetailsAsync(string Email)
         {
-            return await _context.Patient.Include(p => p.Appointment).FirstOrDefaultAsync(p => p.Email == Email);
+            return await _context.Patient.Include(p => p.Appointment).Include(p=>p.Diagnoses).Include(p=>p.Prescriptions).Include(p=>p.Laboratories).FirstOrDefaultAsync(p => p.Email == Email);
         }
 
         public async Task<bool> ExistByEmailAsync(string Email)

@@ -11,5 +11,6 @@
         public IList<Appointment> Appointment { get; set; }
         public IList<Diagnosis> Diagnoses { get; set; }
         public IList<Prescription> Prescriptions { get; set; }
+        public IList<Laboratory> Laboratories { get; set; }
     }
 }

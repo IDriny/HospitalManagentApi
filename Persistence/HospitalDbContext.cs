@@ -24,6 +24,7 @@ namespace HospitalManagentApi.Persistence
         public  DbSet<ClinicDoctor> ClinicDoctors { get; set; }
         public DbSet<Diagnosis> Diagnoses{ get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }
+        public DbSet<Laboratory> Laboratory { get; set; }
 
 
 
@@ -36,8 +37,10 @@ namespace HospitalManagentApi.Persistence
             modelBuilder.ApplyConfiguration(new ClinicDoctorsConfiguration());
             modelBuilder.ApplyConfiguration(new DiagnosisConfiguration());
             modelBuilder.ApplyConfiguration(new PrescriptionConfiguration());
+            modelBuilder.ApplyConfiguration(new PatientConfiguration());
+            
 
-            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            //modelBuilder.ApplyConfiguration(new RoleConfiguration());
             /*
             //Appointment Configration
             //modelBuilder.Entity<Appointment>().Property(a => a.DoctorId)
