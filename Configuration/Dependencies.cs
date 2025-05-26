@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
+using Microsoft.AspNetCore.OData;
 
 namespace HospitalManagentApi.Configuration
 {
@@ -34,7 +35,10 @@ namespace HospitalManagentApi.Configuration
 
         public static IServiceCollection AddControllerServices(this IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddOData(op =>
+            {
+                op.OrderBy().Select().Filter();
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();

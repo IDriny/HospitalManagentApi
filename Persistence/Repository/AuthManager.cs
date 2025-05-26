@@ -37,6 +37,11 @@ namespace HospitalManagentApi.Persistence.Repository
             _user.UserName = userModel.Email;
             var result = await _userManager.CreateAsync(_user,userModel.Password);
 
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(_user, "User");
+            }
+
             return result.Errors;
         }
 

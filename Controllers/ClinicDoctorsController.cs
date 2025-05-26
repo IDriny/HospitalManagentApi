@@ -11,6 +11,7 @@ using HospitalManagentApi.Models.ClinicDoctor;
 using HospitalManagentApi.Persistence;
 using HospitalManagentApi.Core.Contracts;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.OData.Query;
 
 namespace HospitalManagentApi.Controllers
 {
@@ -29,6 +30,7 @@ namespace HospitalManagentApi.Controllers
 
         // GET: api/ClinicDoctors
         [HttpGet]
+        [EnableQuery]
         public async Task<ActionResult<IEnumerable<GetClinicDoctorModel>>> GetClinicDoctors()
         {
             var Clinics = await _clinicDoctorRepo.GetAllAsync();

@@ -11,6 +11,7 @@ using HospitalManagentApi.Core.Domain;
 using HospitalManagentApi.Models.Diagnosis;
 using HospitalManagentApi.Persistence;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.OData.Query;
 
 namespace HospitalManagentApi.Controllers
 {
@@ -29,7 +30,8 @@ namespace HospitalManagentApi.Controllers
 
         // GET: api/Diagnoses
         [HttpGet]
-        [Authorize(Roles = "Administrator")]
+        [EnableQuery]
+        [Authorize(Roles = "User,Administrator")]
         public async Task<ActionResult<IEnumerable<GetDiagnosisModel>>> GetDiagnoses()
         {
             var diagnoses = await _diagnosisRepo.GetAllAsync();

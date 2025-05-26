@@ -11,6 +11,7 @@ using HospitalManagentApi.Core.Domain;
 using HospitalManagentApi.Models.Appointment;
 using HospitalManagentApi.Persistence;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.OData.Query;
 
 namespace HospitalManagentApi.Controllers
 {
@@ -29,6 +30,7 @@ namespace HospitalManagentApi.Controllers
 
         // GET: api/Appointments
         [HttpGet]
+        [EnableQuery]
         [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<IEnumerable<GetAppointmentModel>>> GetAppointments()
         {

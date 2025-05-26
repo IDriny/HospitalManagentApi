@@ -12,6 +12,7 @@ using HospitalManagentApi.Core.Contracts;
 using HospitalManagentApi.Models.Prescription;
 using Microsoft.OpenApi.Validations;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.OData.Query;
 
 namespace HospitalManagentApi.Controllers
 {
@@ -30,6 +31,7 @@ namespace HospitalManagentApi.Controllers
 
         // GET: api/Prescriptions
         [HttpGet]
+        [EnableQuery]
         [Authorize(Roles = "User,Administrator")]
         public async Task<ActionResult<IEnumerable<GetPrescriptionModel>>> GetPrescriptions()
         {

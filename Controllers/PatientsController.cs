@@ -13,6 +13,7 @@ using HospitalManagentApi.Models.Patient;
 using HospitalManagentApi.Persistence;
 using HospitalManagentApi.Persistence.Repository;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.OData.Query;
 
 namespace HospitalManagentApi.Controllers
 {
@@ -33,6 +34,7 @@ namespace HospitalManagentApi.Controllers
 
         // GET: api/Patients
         [HttpGet]
+        [EnableQuery]
         [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<IEnumerable<GetPatientModel>>> GetPatient()
         {
@@ -44,7 +46,7 @@ namespace HospitalManagentApi.Controllers
 
         // GET: api/Patients/5
         [HttpGet("{Email}")]
-        [Authorize(Roles = "User,Administrator")]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<PatientModel>> GetPatient(string Email)
         {
             var patient = await _patientRepo.GetDetailsAsync(Email);
