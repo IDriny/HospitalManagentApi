@@ -11,6 +11,8 @@ using HospitalManagentApi.Core.Domain;
 using HospitalManagentApi.Models.Appointment;
 using HospitalManagentApi.Models.Patient;
 using HospitalManagentApi.Persistence;
+using HospitalManagentApi.Persistence.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalManagentApi.Controllers
 {
@@ -20,15 +22,18 @@ namespace HospitalManagentApi.Controllers
     {
         private readonly IPatientRepo _patientRepo;
         private readonly IMapper _mapper;
+        private readonly IAuthManager _authManager;
 
-        public PatientsController(IPatientRepo patientRepo, IMapper mapper)
+        public PatientsController(IPatientRepo patientRepo, IMapper mapper, IAuthManager authManager)
         {
             _patientRepo = patientRepo;
             _mapper = mapper;
+            _authManager = authManager;
         }
 
         // GET: api/Patients
         [HttpGet]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<IEnumerable<GetPatientModel>>> GetPatient()
         {
             var patients = await _patientRepo.GetAllAsync();
@@ -39,6 +44,7 @@ namespace HospitalManagentApi.Controllers
 
         // GET: api/Patients/5
         [HttpGet("{Email}")]
+        [Authorize(Roles = "User,Administrator")]
         public async Task<ActionResult<PatientModel>> GetPatient(string Email)
         {
             var patient = await _patientRepo.GetDetailsAsync(Email);
@@ -60,6 +66,7 @@ namespace HospitalManagentApi.Controllers
         // PUT: api/Patients/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "User,Administrator")]
         public async Task<IActionResult> PutPatient(int id, UpdatePatientModel updatePatient)
         {
             if (id != updatePatient.Id)
@@ -101,6 +108,7 @@ namespace HospitalManagentApi.Controllers
         // POST: api/Patients
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<Patient>> PostPatient(CreatePatientModel NewPatient)
         {
             var patient = _mapper.Map<Patient>(NewPatient);
@@ -115,6 +123,7 @@ namespace HospitalManagentApi.Controllers
 
         // DELETE: api/Patients/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeletePatient(int id)
         {
             var patient = await _patientRepo.GetAsync(id);

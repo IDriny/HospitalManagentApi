@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using HospitalManagentApi.Core.Domain;
 using HospitalManagentApi.Models.Diagnosis;
 using HospitalManagentApi.Persistence;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalManagentApi.Controllers
 {
@@ -28,6 +29,7 @@ namespace HospitalManagentApi.Controllers
 
         // GET: api/Diagnoses
         [HttpGet]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<IEnumerable<GetDiagnosisModel>>> GetDiagnoses()
         {
             var diagnoses = await _diagnosisRepo.GetAllAsync();
@@ -37,6 +39,7 @@ namespace HospitalManagentApi.Controllers
 
         // GET: api/Diagnoses/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "User,Administrator")]
         public async Task<ActionResult<DiagnosisModel>> GetDiagnosis(int id)
         {
             var diagnosis = await _diagnosisRepo.GetDiagnosisDetailsAsync(id);
@@ -56,6 +59,7 @@ namespace HospitalManagentApi.Controllers
         // PUT: api/Diagnoses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutDiagnosis(int id, UpdateDiagnosisModel updateDiagnosis)
         {
             if (id != updateDiagnosis.Id)
@@ -97,6 +101,7 @@ namespace HospitalManagentApi.Controllers
         // POST: api/Diagnoses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<Diagnosis>> PostDiagnosis(CreateDiagnosisModel createDiagnosis)
         {
             var diagnosis = _mapper.Map<Diagnosis>(createDiagnosis);
@@ -111,6 +116,7 @@ namespace HospitalManagentApi.Controllers
 
         // DELETE: api/Diagnoses/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteDiagnosis(int id)
         {
             var diagnosis = await _diagnosisRepo.GetAsync(id);

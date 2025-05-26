@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using HospitalManagentApi.Core.Domain;
 using HospitalManagentApi.Models.Appointment;
 using HospitalManagentApi.Persistence;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalManagentApi.Controllers
 {
@@ -28,6 +29,7 @@ namespace HospitalManagentApi.Controllers
 
         // GET: api/Appointments
         [HttpGet]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<IEnumerable<GetAppointmentModel>>> GetAppointments()
         {
             var appointments = await _AppointmentRepo.GetAllAsync();
@@ -37,6 +39,7 @@ namespace HospitalManagentApi.Controllers
 
         // GET: api/Appointments/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "User,Administrator")]
         public async Task<ActionResult<GetAppointmentInfoModel>> GetAppointment(int id)
         {
             var appointment = await _AppointmentRepo.GetDetailsAsync(id);
@@ -56,6 +59,7 @@ namespace HospitalManagentApi.Controllers
         // PUT: api/Appointments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "User,Administrator")]
         public async Task<IActionResult> PutAppointment(int id, UpdateAppointmentModel Updatedappointment)
         {
             if (id != Updatedappointment.Id)
@@ -91,6 +95,7 @@ namespace HospitalManagentApi.Controllers
         // POST: api/Appointments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "User,Administrator")]
         public async Task<ActionResult<Appointment>> PostAppointment(CreateAppointmentModel CreatedAppointment)
         {
             var appointment = _mapper.Map<Appointment>(CreatedAppointment);
@@ -103,6 +108,7 @@ namespace HospitalManagentApi.Controllers
 
         // DELETE: api/Appointments/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "User,Administrator")]
         public async Task<IActionResult> DeleteAppointment(int id)
         {
             var appointment = await _AppointmentRepo.GetAsync(id);

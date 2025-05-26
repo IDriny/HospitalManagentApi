@@ -10,6 +10,7 @@ using HospitalManagentApi.Core.Domain;
 using HospitalManagentApi.Models.ClinicDoctor;
 using HospitalManagentApi.Persistence;
 using HospitalManagentApi.Core.Contracts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalManagentApi.Controllers
 {
@@ -57,6 +58,7 @@ namespace HospitalManagentApi.Controllers
         // PUT: api/ClinicDoctors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutClinicDoctor(int id, UpdateClinicDoctorModel updateClinicDoctor)
         {
             if (id != updateClinicDoctor.Id)
@@ -96,6 +98,7 @@ namespace HospitalManagentApi.Controllers
         // POST: api/ClinicDoctors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<ClinicDoctor>> PostClinicDoctor(CreateClinicDoctorModel CreatedClinicDoctor)
         {
             var clinicDoctor = _mapper.Map<ClinicDoctor>(CreatedClinicDoctor);
@@ -109,6 +112,7 @@ namespace HospitalManagentApi.Controllers
 
         // DELETE: api/ClinicDoctors/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteClinicDoctor(int id)
         {
             var clinicDoctor = await _clinicDoctorRepo.GetAsync(id);

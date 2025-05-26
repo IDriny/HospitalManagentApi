@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using AutoMapper;
+using Azure.Core;
 using HospitalManagentApi.Core.Contracts;
 using HospitalManagentApi.Core.Domain;
 using HospitalManagentApi.Models.Patient;
@@ -98,6 +99,5 @@ namespace HospitalManagentApi.Persistence.Repository
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        
     }
 }

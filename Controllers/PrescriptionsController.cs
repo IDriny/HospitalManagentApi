@@ -11,6 +11,7 @@ using AutoMapper;
 using HospitalManagentApi.Core.Contracts;
 using HospitalManagentApi.Models.Prescription;
 using Microsoft.OpenApi.Validations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalManagentApi.Controllers
 {
@@ -29,6 +30,7 @@ namespace HospitalManagentApi.Controllers
 
         // GET: api/Prescriptions
         [HttpGet]
+        [Authorize(Roles = "User,Administrator")]
         public async Task<ActionResult<IEnumerable<GetPrescriptionModel>>> GetPrescriptions()
         {
             var prescription = await _prescriptionRepo.GetAllAsync();
@@ -39,6 +41,7 @@ namespace HospitalManagentApi.Controllers
 
         // GET: api/Prescriptions/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "User,Administrator")]
         public async Task<ActionResult<PrescriptionModel>> GetPrescription(int id)
         {
             var prescription = await _prescriptionRepo.GetPrescriptionDetalils(id);
@@ -56,6 +59,7 @@ namespace HospitalManagentApi.Controllers
         // PUT: api/Prescriptions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutPrescription(int id, UpdatePrescriptionModel updatePrescription)
         {
             if (id != updatePrescription.Id)
@@ -94,6 +98,7 @@ namespace HospitalManagentApi.Controllers
         // POST: api/Prescriptions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<Prescription>> PostPrescription(CreatePrescriptionModel createPrescription)
         {
             var prescription =_mapper.Map<Prescription>(createPrescription);
@@ -107,6 +112,7 @@ namespace HospitalManagentApi.Controllers
 
         // DELETE: api/Prescriptions/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeletePrescription(int id)
         {
             var prescription = await _prescriptionRepo.GetAsync(id);
