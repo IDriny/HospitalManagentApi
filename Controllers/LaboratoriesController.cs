@@ -9,8 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using HospitalManagentApi.Core.Domain;
 using HospitalManagentApi.Models.Laboratory;
 using HospitalManagentApi.Persistence;
+using HospitalManagentApi.Core.Contracts;
+using Microsoft.AspNetCore.Authorization;
 
-namespace HospitalManagentApi.Core.Contracts
+namespace HospitalManagentApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -29,6 +31,7 @@ namespace HospitalManagentApi.Core.Contracts
 
         // GET: api/Laboratories
         [HttpGet]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<List<GetLabModel>>> GetLaboratory()
         {
             var labs = await _labRepo.GetAllAsync();
@@ -38,6 +41,7 @@ namespace HospitalManagentApi.Core.Contracts
 
         // GET: api/Laboratories/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Administrator,User")]
         public async Task<ActionResult<LabModel>> GetLaboratory(int id)
         {
             var laboratory = await _labRepo.GetLabDetailsAsync(id);
@@ -55,6 +59,7 @@ namespace HospitalManagentApi.Core.Contracts
         // PUT: api/Laboratories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutLaboratory(int id, UpdateLabModel updateLab)
         {
             
@@ -92,6 +97,7 @@ namespace HospitalManagentApi.Core.Contracts
         // POST: api/Laboratories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<Laboratory>> PostLaboratory(CreateLabModel newLab)
         {
             var lab = _mapper.Map<Laboratory>(newLab);
@@ -104,6 +110,7 @@ namespace HospitalManagentApi.Core.Contracts
 
         // DELETE: api/Laboratories/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteLaboratory(int id)
         {
             var laboratory = await _labRepo.GetAsync(id);
