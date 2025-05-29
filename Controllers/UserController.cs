@@ -36,12 +36,11 @@ namespace HospitalManagentApi.Controllers
             var patient = _mapper.Map<CreatePatientModel>(user);
             var addedPatient = _mapper.Map<Patient>(patient);
             addedPatient.FullName = patient.FirstName + " " + patient.LastName;
-            addedPatient.PhoneNumber=patient.PhoneNumber;
+            addedPatient.PhoneNumber = patient.PhoneNumber;
             if (!await _patientRepo.ExistByEmailAsync(addedPatient.Email))
             {
                 await _patientRepo.AddAsync(addedPatient);
             }
-            
             var errors = await _authManager.SignUp(newUser);
             if (errors.Any())
             {
@@ -52,6 +51,7 @@ namespace HospitalManagentApi.Controllers
 
                 return BadRequest();
             }
+           
             return Ok();
         }
 

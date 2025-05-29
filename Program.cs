@@ -23,13 +23,30 @@ builder.Host.AddSerilog();
 
 var app = builder.Build();
 
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-   
+    app.UseSwagger();
+    app.UseSwaggerUI(OP =>
+    {
+        OP.SwaggerEndpoint("/swagger/v1/swagger.json","HospitalmanagementAPIV1");
+    });
 }
-app.UseSwagger();
-app.UseSwaggerUI();
+else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(OP =>
+    {
+        OP.SwaggerEndpoint("/swagger/v1/swagger.json", "HospitalmanagementAPIV1");
+        OP.RoutePrefix = "";
+    });
+}
+
+
+
+app.UseStaticFiles();
 
 app.UseSerilogRequestLogging();
 

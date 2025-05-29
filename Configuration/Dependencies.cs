@@ -18,7 +18,7 @@ namespace HospitalManagentApi.Configuration
         public static IServiceCollection AddDbContextServices(this IServiceCollection services, IConfiguration configuration)
         {
             // Add services to the container.
-            var connectionString = configuration.GetConnectionString("HospitalDbConnectionString");
+            var connectionString = configuration.GetConnectionString("DefaultSQLConnection");
             services.AddDbContext<HospitalDbContext>(options => options.UseSqlServer(connectionString));
             return services;
         }
