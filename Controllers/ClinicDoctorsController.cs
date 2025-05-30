@@ -50,11 +50,8 @@ namespace HospitalManagentApi.Controllers
             {
                 return NotFound();
             }
-
-            var record = _mapper.Map<ClinicDoctorModel>(clinicDoctor);
-            record.DrName = clinicDoctor.Doctor.FullName;
-            record.ClinicName = clinicDoctor.Clinic.Name;
-            return Ok(record);
+            
+            return Ok(clinicDoctor);
         }
 
         // PUT: api/ClinicDoctors/5
