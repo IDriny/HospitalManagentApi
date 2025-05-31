@@ -17,10 +17,12 @@ namespace HospitalManagentApi.Persistence.Configration
 
             builder.HasOne(c => c.Doctor)
                 .WithMany(d => d.Appointment)
-                .HasForeignKey(a => a.DoctorId);
+                .HasForeignKey(a => a.DoctorId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(a => a.Patient)
                 .WithMany(p => p.Appointment)
-                .HasForeignKey(a => a.PatientId);
+                .HasForeignKey(a => a.PatientId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
 }

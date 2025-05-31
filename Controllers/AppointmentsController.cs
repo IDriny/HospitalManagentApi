@@ -113,8 +113,7 @@ namespace HospitalManagentApi.Controllers
         [Authorize(Roles = "User,Administrator")]
         public async Task<IActionResult> DeleteAppointment(int id)
         {
-            var appointment = await _AppointmentRepo.GetAsync(id);
-            if (appointment == null)
+            if (await AppointmentExists(id))
             {
                 return NotFound();
             }

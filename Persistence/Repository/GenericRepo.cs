@@ -43,7 +43,7 @@ namespace HospitalManagentApi.Persistence.Repository
         public async Task DeleteAsync(int id)
         {
             var entity = await GetAsync(id);
-            _context.Set<T>().Remove(entity);
+            _context.Entry(entity).State = EntityState.Deleted; // Mark for deletion
             await _context.SaveChangesAsync();
         }
 
