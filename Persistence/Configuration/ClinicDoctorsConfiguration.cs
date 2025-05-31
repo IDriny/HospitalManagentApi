@@ -14,7 +14,7 @@ namespace HospitalManagentApi.Persistence.Configuration
 
             builder.HasOne(c => c.Clinic)
                 .WithMany(c => c.Doctors)
-                .HasForeignKey(c => c.DoctorId);
+                .HasForeignKey(c => c.ClinicId);
         }
     }
 }
