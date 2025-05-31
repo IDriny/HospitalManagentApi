@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HospitalManagentApi.Persistence.Repository
 {
-    public class ClinicDoctorRepo:GenericRepo<ClinicDoctor>,Core.Contracts.IClinicDoctorRepo
+    public class ClinicDoctorRepo:GenericRepo<ClinicDoctor>,IClinicDoctorRepo
     {
         private readonly Persistence.HospitalDbContext _context;
         private readonly IMapper _mapper;
@@ -17,15 +17,11 @@ namespace HospitalManagentApi.Persistence.Repository
             _mapper = mapper;
         }
 
-        public async Task<ClinicDoctorModel> GetDetailsAsync(int id)
+        public async Task<ClinicDoctor> GetDetailsAsync(int id)
         {
-            var clinicsDoc = await _context.ClinicDoctors.Include(c => c.Doctor).Include(c => c.Clinic)
+            return await _context.ClinicDoctors.Include(c => c.Doctor).Include(c => c.Clinic)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
-            var record = _mapper.Map<ClinicDoctorModel>(clinicsDoc);
-            record.ClinicName = clinicsDoc.Clinic.Name;
-            record.DrName = clinicsDoc.Doctor.FullName;
-            return  record;
         }
     }
 }

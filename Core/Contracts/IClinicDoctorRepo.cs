@@ -5,6 +5,6 @@ namespace HospitalManagentApi.Core.Contracts
 {
     public interface IClinicDoctorRepo:IGenericRepo<ClinicDoctor>
     {
-        public Task<ClinicDoctorModel> GetDetailsAsync(int id);
+        public Task<ClinicDoctor> GetDetailsAsync(int id);
     }
 }
