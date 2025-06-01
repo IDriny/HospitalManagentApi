@@ -59,18 +59,18 @@ namespace HospitalManagentApi.Controllers
         }
 
         // GET: api/Appointments/5
-        [HttpGet("{id}")]
+        [HttpGet("UserAppointment/{Userid}")]
         [Authorize(Roles = "User,Administrator")]
-        public async Task<ActionResult<IEnumerable<GetAppointmentInfoModel>>> GetAllUserAppointment(int id)
+        public async Task<ActionResult<IEnumerable<GetAppointmentInfoModel>>> GetAllUserAppointment(int Userid)
         {
-            var appointment = await _AppointmentRepo.GetAllUserAppointment(id);
+            var appointment = await _AppointmentRepo.GetAllUserAppointment(Userid);
 
             if (appointment == null)
             {
                 return NotFound();
             }
 
-            var record = _mapper.Map<List<GetAppointmentInfoModel>>(appointment);
+            var record = _mapper.Map<List<Appointment>>(appointment);
 
             return Ok(record);
         }
@@ -130,7 +130,7 @@ namespace HospitalManagentApi.Controllers
         [Authorize(Roles = "User,Administrator")]
         public async Task<IActionResult> DeleteAppointment(int id)
         {
-            if (await AppointmentExists(id))
+            if (!await AppointmentExists(id))
             {
                 return NotFound();
             }

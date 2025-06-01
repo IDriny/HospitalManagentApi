@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "HospitalManagentApi-O6U-GRAD2025",
+      "defaultValue": "HospitalManagentApi20250601133735",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }
