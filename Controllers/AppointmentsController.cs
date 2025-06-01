@@ -31,7 +31,7 @@ namespace HospitalManagentApi.Controllers
         // GET: api/Appointments
         [HttpGet]
         [EnableQuery]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "User,Administrator")]
         public async Task<ActionResult<IEnumerable<GetAppointmentModel>>> GetAppointments()
         {
             var appointments = await _AppointmentRepo.GetAllAsync();
@@ -54,6 +54,23 @@ namespace HospitalManagentApi.Controllers
             var record = _mapper.Map<GetAppointmentInfoModel>(appointment);
             record.DoctorName = appointment.Doctor.FullName;
             record.PatientName = appointment.Patient.FullName;
+
+            return Ok(record);
+        }
+
+        // GET: api/Appointments/5
+        [HttpGet("{id}")]
+        [Authorize(Roles = "User,Administrator")]
+        public async Task<ActionResult<IEnumerable<GetAppointmentInfoModel>>> GetAllUserAppointment(int id)
+        {
+            var appointment = await _AppointmentRepo.GetAllUserAppointment(id);
+
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            var record = _mapper.Map<List<GetAppointmentInfoModel>>(appointment);
 
             return Ok(record);
         }
