@@ -45,4 +45,4 @@
 ### Deployed on Azure
 ---
 the best way to deploy any ASP.NET Core Web APP is to use [Azure web app](https://learn.microsoft.com/en-us/azure/app-service/) 
-    - To deploy this ASP.NET Core web app to Azure, use the `Azure App Service` extension in Visual Studio Code or run `az webapp up` from the CLI after configuring your Azure subscription.  
+- To deploy this ASP.NET Core web app to Azure, use the `Azure App Service` extension in Visual Studio Code or run `az webapp up` from the CLI after configuring your Azure subscription.  
