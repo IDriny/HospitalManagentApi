@@ -2,6 +2,7 @@
 **I'm glad to share that I've finished working on my first web app using ASP.NET Core** 
 
 
+
 ### Introduction
 ---
 - It's simple an API for a hospital management system
@@ -13,6 +14,10 @@
 - this project have been developed in cooperation with my dear friend and cooworker:  [Mohammed Tark](https://github.com/sezeef)
 
 
+
+
+
+
 ### Getting started
 ---
 - first you need create MSSQL connection
@@ -20,6 +25,10 @@
 - then instll extension `Microsoft.EntityFrameworkCore` , `Microsoft.EntityFrameworkCore.SqlServer` , `Microsoft.EntityFrameworkCore.Tools` ,`Microsoft.VisualStudio.Web.CodeGeneration.Design` if not already installed
 - then `add-migration {migration name}` throw Package Manager Console
 - finally apply these migration to the data base using `update-databse` comand
+  
+
+
+
 
 
 ### for better understanding
@@ -27,6 +36,11 @@
 to learn more about ASP.NET Core And web APIs
     - visit swagger documentaion [Swagger](https://swagger.io/docs/)
     - Read microsoft documentation for [ASP.NET Core web APIs](https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-9.0&tabs=visual-studio)
+
+
+
+
+
 
 ### Deployed on Azure
 ---
