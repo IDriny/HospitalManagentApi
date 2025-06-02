@@ -1,4 +1,4 @@
-## I'm glad to share that I finished working on my first web app using ASP.NET Core 
+**I'm glad to share that I finished working on my first web app using ASP.NET Core** 
 
 
 ### Introduction
@@ -19,3 +19,15 @@
 - then instll extension `Microsoft.EntityFrameworkCore` , `Microsoft.EntityFrameworkCore.SqlServer` , `Microsoft.EntityFrameworkCore.Tools` ,`Microsoft.VisualStudio.Web.CodeGeneration.Design` if not already installed
 - then `add-migration {migration name}` throw Package Manager Console
 - finally apply these migration to the data base using `update-databse` comand
+
+
+### for better understanding
+---
+to learn more about ASP.NET Core And web APIs
+    - visit swagger documentaion [Swagger](https://swagger.io/docs/)
+    - Read microsoft documentation for [ASP.NET Core web APIs](https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-9.0&tabs=visual-studio)
+
+### Deployed on Azure
+---
+the best way to deploy any ASP.NET Core Web APP is to use [Azure web app](https://learn.microsoft.com/en-us/azure/app-service/) 
+    - To deploy this ASP.NET Core web app to Azure, use the `Azure App Service` extension in Visual Studio Code or run `az webapp up` from the CLI after configuring your Azure subscription.  
