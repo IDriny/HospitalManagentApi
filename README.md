@@ -12,6 +12,6 @@
     ### Getting started
 - first you need create MSSQL connection
 - then add the cooection string to {appsettings.Production.json} file
-- then instll extension {Microsoft.EntityFrameworkCore} , {Microsoft.EntityFrameworkCore.SqlServer} , {Microsoft.EntityFrameworkCore.Tools} ,{Microsoft.VisualStudio.Web.CodeGeneration.Design} ifnot already installed
-- then {add-migration} throw Package Manager Console
-- finally apply these migration to the data base using {update-databse} comand
+- then instll extension 'Microsoft.EntityFrameworkCore' , 'Microsoft.EntityFrameworkCore.SqlServer' , 'Microsoft.EntityFrameworkCore.Tools' ,'Microsoft.VisualStudio.Web.CodeGeneration.Design' if not already installed
+- then 'add-migration' throw Package Manager Console
+- finally apply these migration to the data base using 'update-databse' comand
