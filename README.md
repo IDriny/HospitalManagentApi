@@ -33,7 +33,7 @@
 
 ### for better understanding
 ---
-to learn more about ASP.NET Core And web APIs
+- to learn more about ASP.NET Core And web APIs
     - visit swagger documentaion [Swagger](https://swagger.io/docs/)
     - Read microsoft documentation for [ASP.NET Core web APIs](https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-9.0&tabs=visual-studio)
 
