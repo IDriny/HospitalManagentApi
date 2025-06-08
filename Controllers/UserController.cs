@@ -37,7 +37,7 @@ namespace HospitalManagentApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> SignUp([FromBody]SignUpModel newUser)
+        public async Task<ActionResult<string>> SignUp([FromBody]SignUpModel newUser)
         {
             var user = _mapper.Map<ApiUser>(newUser);
             var patient = _mapper.Map<CreatePatientModel>(user);
@@ -49,18 +49,13 @@ namespace HospitalManagentApi.Controllers
                 await _patientRepo.AddAsync(addedPatient);
             }
             var errors = await _authManager.SignUp(newUser);
-            if (errors.Any())
+            if (errors==null)
             {
-                foreach (var error in errors)
-                {
-                    ModelState.AddModelError(error.Code,error.Description);
-                }
-
                 return BadRequest();
             }
 
             await _emailSender.SendEmailAsync(newUser.Email, "Welcome to Samadoun NP Hospital",addedPatient.FullName);
-            return Ok();
+            return Ok(errors);
         }
         //api/User/SignUp
         [HttpPost]

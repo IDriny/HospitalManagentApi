@@ -31,7 +31,7 @@ namespace HospitalManagentApi.Persistence.Repository
             _configuration = configuration;
         }
 
-        public async Task<IEnumerable<IdentityError>> SignUp(SignUpModel userModel)
+        public async Task<string> SignUp(SignUpModel userModel)
         {
             _user = _mapper.Map<ApiUser>(userModel);
             _user.UserName = userModel.Email;
@@ -40,10 +40,12 @@ namespace HospitalManagentApi.Persistence.Repository
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(_user, "User");
+                var Token = await GenerateToken();
+                return Token;
             }
 
 
-            return result.Errors;
+            return null;
         }
 
         public async Task<AuthResponseModel> SignIn(LogInModel logInModel)
