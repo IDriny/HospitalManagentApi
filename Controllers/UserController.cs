@@ -48,14 +48,14 @@ namespace HospitalManagentApi.Controllers
             {
                 await _patientRepo.AddAsync(addedPatient);
             }
-            var errors = await _authManager.SignUp(newUser);
-            if (errors==null)
+            var Token = await _authManager.SignUp(newUser);
+            if (Token==null)
             {
                 return BadRequest();
             }
 
             await _emailSender.SendEmailAsync(newUser.Email, "Welcome to Samadoun NP Hospital",addedPatient.FullName);
-            return Ok(errors);
+            return Ok(Token);
         }
         //api/User/SignUp
         [HttpPost]
