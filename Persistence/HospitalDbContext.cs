@@ -37,8 +37,7 @@ namespace HospitalManagentApi.Persistence
             modelBuilder.ApplyConfiguration(new ClinicDoctorsConfiguration());
             modelBuilder.ApplyConfiguration(new DiagnosisConfiguration());
             modelBuilder.ApplyConfiguration(new PrescriptionConfiguration());
-            modelBuilder.ApplyConfiguration(new PatientConfiguration());
-            
+            modelBuilder.ApplyConfiguration(new LaboratoryConfiguration());
 
             //modelBuilder.ApplyConfiguration(new RoleConfiguration());
             /*

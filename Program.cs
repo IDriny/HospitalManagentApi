@@ -15,9 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContextServices(builder.Configuration)
     .AddIdentity()
-    .AddControllerServices()
+    .AddControllerServices(builder.Configuration)
     .AddMapping()
     .AddAuthenticationService(builder.Configuration);
+
 
 builder.Host.AddSerilog();
 
@@ -53,6 +54,8 @@ app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

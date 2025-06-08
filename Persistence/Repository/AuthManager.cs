@@ -42,6 +42,7 @@ namespace HospitalManagentApi.Persistence.Repository
                 await _userManager.AddToRoleAsync(_user, "User");
             }
 
+
             return result.Errors;
         }
 

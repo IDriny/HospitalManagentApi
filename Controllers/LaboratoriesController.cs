@@ -120,6 +120,7 @@ namespace HospitalManagentApi.Controllers
                 return NotFound();
             }
 
+            await _labRepo.DeleteAsync(id);
             //_context.Laboratory.Remove(laboratory);
             //await _context.SaveChangesAsync();
 

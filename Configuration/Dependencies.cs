@@ -11,6 +11,7 @@ using Serilog;
 using System.Text;
 using Microsoft.AspNetCore.OData;
 
+
 namespace HospitalManagentApi.Configuration
 {
     public static class Dependencies
@@ -30,25 +31,6 @@ namespace HospitalManagentApi.Configuration
                 .AddTokenProvider<DataProtectorTokenProvider<ApiUser>>("HospitalManagementAPI")
                 .AddEntityFrameworkStores<HospitalDbContext>()
                 .AddDefaultTokenProviders();
-            return services;
-        }
-
-        public static IServiceCollection AddControllerServices(this IServiceCollection services)
-        {
-            services.AddControllers().AddOData(op =>
-            {
-                op.OrderBy().Select().Filter();
-            });
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
-
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll", b => b.AllowAnyHeader()
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod());
-            });
             return services;
         }
 
@@ -74,8 +56,31 @@ namespace HospitalManagentApi.Configuration
 
             services.AddScoped<ILabRepo, LabRepo>();
 
+            services.AddTransient<IEmailSender, EmailSender>();
+
             services.AddScoped<IAuthManager, AuthManager>();
 
+            return services;
+        }
+
+        public static IServiceCollection AddControllerServices(this IServiceCollection services,IConfiguration configuration)
+        {
+
+            services.AddControllers().AddOData(op =>
+            {
+                op.OrderBy().Select().Filter();
+            });
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", b => b.AllowAnyHeader()
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod());
+            });
+           
             return services;
         }
 

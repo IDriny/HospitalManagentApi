@@ -9,6 +9,17 @@
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/hospitalmanagentapidbserver/databases/HospitalManagentApi_db",
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:HospitalDatabaseConnection"
+    },
+    "mssql2": {
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:DatabaseConnection1",
+      "dynamicId": null
+    },
+    "mssql1": {
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:DatabaseConnection"
     }
   }
 }

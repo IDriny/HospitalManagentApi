@@ -12,7 +12,8 @@ namespace HospitalManagentApi.Persistence.Configuration
 
             builder.HasOne(d => d.Patient)
                 .WithMany(p => p.Diagnoses)
-                .HasForeignKey(d => d.PatientID);
+                .HasForeignKey(d => d.PatientID)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

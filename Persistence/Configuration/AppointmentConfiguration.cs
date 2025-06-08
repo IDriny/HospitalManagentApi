@@ -23,6 +23,10 @@ namespace HospitalManagentApi.Persistence.Configration
                 .WithMany(p => p.Appointment)
                 .HasForeignKey(a => a.PatientId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasIndex(cd => cd.DoctorId);
+            builder.HasIndex(cd => cd.PatientId);
+
         }
     }
 }

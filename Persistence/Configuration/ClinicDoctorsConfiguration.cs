@@ -12,12 +12,12 @@ namespace HospitalManagentApi.Persistence.Configuration
             builder.HasOne(cd => cd.Doctor)
                 .WithMany(d => d.Clinic) // Doctor has many ClinicDoctors
                 .HasForeignKey(cd => cd.DoctorId)
-                .OnDelete(DeleteBehavior.ClientSetNull); // Avoid cascading deletes if needed
+                .OnDelete(DeleteBehavior.Cascade); // Avoid cascading deletes if needed
 
             builder.HasOne(cd => cd.Clinic)
                 .WithMany(c => c.Doctors) // Clinic has many ClinicDoctors
                 .HasForeignKey(cd => cd.ClinicId)
-                .OnDelete(DeleteBehavior.ClientSetNull); // Avoid cascading deletes if needed
+                .OnDelete(DeleteBehavior.Cascade); // Avoid cascading deletes if needed
 
             // Ensure the join table has proper indexes
             builder.HasIndex(cd => cd.DoctorId);
