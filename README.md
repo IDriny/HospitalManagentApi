@@ -31,7 +31,7 @@
 
 
 
-### for better understanding
+### For better understanding
 ---
 - to learn more about ASP.NET Core And web APIs
     - visit swagger documentaion [Swagger](https://swagger.io/docs/)
