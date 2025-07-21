@@ -11,7 +11,7 @@
 - and here the web app that used my API
    - https://hospital-project-ruddy.vercel.app/
 - This is my first project and I'm sure it's not the last, so stay tuned for more projects
-- this project have been developed in cooperation with my dear friend and cooworker:  [Mohammed Tark](https://github.com/sezeef)
+- This project have been developed in cooperation with my dear friend and cooworker:  [Mohammed Tark](https://github.com/sezeef)
 
 
 
